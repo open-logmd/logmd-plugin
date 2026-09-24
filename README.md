@@ -45,6 +45,7 @@ Invoked as `/logbook:<skill>`:
 | `runbook` | `runbooks/` | An ordered procedure with verification and undo. |
 | `document` | `docs/` | The long form: design, architecture, analysis. |
 | `walkthrough` | `flows/` | One process traced through the code, every diagram node anchored to `file:line`. |
+| `template` | `<folder>/.ok/templates/` | A reusable note shape, from the vault's conventions and how the practice does that kind of note. |
 | `run` | The note it runs | Do the job a note describes (a feature or PR review from a template), recording each run back in the note. |
 | `okf` | — | The Open Knowledge Format rules the others write to. |
 
