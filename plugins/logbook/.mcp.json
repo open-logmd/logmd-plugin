@@ -1,0 +1,12 @@
+{
+  "mcpServers": {
+    "logmd": {
+      "type": "http",
+      "url": "${LOGMD_MCP_URL}",
+      "headers": {
+        "CF-Access-Client-Id": "${LOGMD_CF_ACCESS_CLIENT_ID:-}",
+        "CF-Access-Client-Secret": "${LOGMD_CF_ACCESS_CLIENT_SECRET:-}"
+      }
+    }
+  }
+}

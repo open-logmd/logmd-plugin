@@ -1,0 +1,39 @@
+# Static checks only: the manifests parse, their versions agree, and the hook is
+# valid shell. Nothing here talks to a vault.
+name: lint
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+
+      - name: JSON parses
+        run: |
+          for f in .claude-plugin/marketplace.json plugins/*/.claude-plugin/plugin.json \
+                   plugins/*/.mcp.json plugins/*/hooks/hooks.json; do
+            jq empty "$f" && echo "ok  $f"
+          done
+
+      # The marketplace entry is what `claude plugin` compares to decide an update is
+      # due; a plugin.json that drifts from it ships a version nobody is offered.
+      - name: versions agree
+        run: |
+          for plugin in plugins/*/; do
+            name=$(jq -r .name "$plugin/.claude-plugin/plugin.json")
+            own=$(jq -r .version "$plugin/.claude-plugin/plugin.json")
+            listed=$(jq -r --arg n "$name" '.plugins[] | select(.name == $n) | .version' .claude-plugin/marketplace.json)
+            [ "$own" = "$listed" ] || { echo "$name: plugin.json $own, marketplace.json $listed"; exit 1; }
+            echo "ok  $name $own"
+          done
+
+      - name: shellcheck + bash -n
+        run: |
+          for f in plugins/*/hooks/*.sh; do
+            bash -n "$f" && shellcheck "$f" && echo "ok  $f"
+          done

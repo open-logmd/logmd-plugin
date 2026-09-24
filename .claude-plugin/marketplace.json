@@ -1,0 +1,16 @@
+{
+  "$schema": "https://anthropic.com/claude-code/marketplace.schema.json",
+  "name": "logmd",
+  "description": "Claude Code plugins for LogMD vaults.",
+  "owner": {
+    "name": "M. Galicia"
+  },
+  "plugins": [
+    {
+      "name": "logbook",
+      "source": "./plugins/logbook",
+      "description": "Capture, synthesize and author a LogMD vault over its MCP server: immutable work-log notes, cross-linked wiki pages, guides, runbooks, documents, code walkthroughs, per-repo task boards, and running the jobs notes describe.",
+      "version": "0.8.0"
+    }
+  ]
+}
