@@ -1,6 +1,6 @@
 ---
 name: template
-description: Design and write a template (a document skeleton under <folder>/.ok/templates) in the LogMD vault — a meeting note, a postmortem, an ADR, a 1:1, a PR review, any note that gets written again and again — shaped by the vault's own conventions and by how that kind of document is done well, researched on the web. Use when the user says "template", "plantilla", "crea un template", "/logbook:template", or asks for a reusable shape for a kind of note.
+description: Design and write a template (a document skeleton under <folder>/.ok/templates) in the LogMD vault — a meeting note, a postmortem, an ADR, a 1:1, a PR review, any note that gets written again and again — or a folder template, a whole project laid out as several notes with stages it moves through, from spec to postmortem. Shaped by the vault's own conventions and by how that kind of document is done well, researched on the web. Use when the user says "template", "plantilla", "crea un template", "template de carpeta", "/logbook:template", or asks for a reusable shape for a kind of note or of project.
 ---
 
 # logbook · template
@@ -19,6 +19,12 @@ It lives at `<folder>/.ok/templates/<name>.md` and applies to that folder and ev
 folder under it. **It is written with `template_write`, never `write`** — `write`
 refuses paths under `.ok/`.
 
+A **folder template** is the same decision made for work that is more than one note
+— a project that starts as a spec, grows a design and a development log, ships,
+and ends in a postmortem. It lives at `<folder>/.ok/templates/<name>/`: the notes a
+new folder starts with, at their paths inside it, plus `stages`, the lifecycle the
+folder moves through. Section 4b says how to design one.
+
 ## 1. Pin down the kind of note
 
 Four things, taken from the request and asked for only when they cannot be:
@@ -29,6 +35,10 @@ Four things, taken from the request and asked for only when they cannot be:
   there, not at the root, unless the kind really applies everywhere.
 - **Who fills it and when** — during a meeting, after an incident, as a job for
   `/logbook:run`. That decides how long it can be.
+- **One note or a folder.** A kind that is written once and done is a note
+  template. Work that produces several notes over weeks, in a recognisable order,
+  is a folder template — and the notes it produces late (a release note, a
+  postmortem) are note templates of their own, tied to its stages.
 - **Whether it is a job.** A note that tells an agent what to do (review this
   feature, build that one) is run by `/logbook:run`: its parameters go in the
   frontmatter, its instructions in the body, and it ends with a section the run
@@ -109,6 +119,38 @@ them, with links, in your answer.
 - `description` — **when to pick it**, one sentence: "For an incident once it is
   resolved: timeline, impact, causes and follow-ups."
 
+## 4b. Design a folder template
+
+**Stages.** The lifecycle, in the order it happens, as short English kebab-case
+words: `spec, development, released, closed`; `open, mitigated, resolved, reviewed`
+for an incident. Each stage is a moment someone would say out loud ("it shipped").
+Four or five at most — a stage nobody moves the folder into is noise in a menu.
+A folder made from the template starts at the first; the user moves it from the
+notebook's menu, or an agent with `folder` and `frontmatter: {stage}`.
+
+**Files — only what day one needs.** A file created empty on day one and filled
+months later is a file people delete or forget. Lay out:
+
+- **An entry note** (`README.md` or `index.md`): what the project is, and a
+  section linking the notes as they appear. It is what opens when the folder is
+  made.
+- **The notes the first stage writes** — the spec itself.
+- **Logs that accumulate from the start**, in a subfolder when they are one note
+  per day or per decision (`log/`, `decisions/`).
+
+Every file follows section 4: frontmatter with `type`, empty fields, one italic
+prompt per heading. Inside a folder template **`{{name}}`** is also accepted — the
+new folder's name — so the notes can say which project they belong to
+(`project: {{name}}`).
+
+**Later stages — note templates with `when`.** What a stage calls for (a release
+note at `released`, a postmortem at `closed`) is a note template written in the
+**same folder as the folder template**, not inside it, with `when` naming the
+stages it is for. It is then inherited by every project, and improving it
+improves it everywhere. From a folder at one of those stages, `templates` marks
+it `suggested`, and the app lists it first. Check first whether the vault already
+has one of that kind (step 2) and add `when` to it rather than writing a twin.
+
 ## 5. Say the plan, then write it
 
 In the chat, before `template_write`: the name and folder, whether it is new or
@@ -118,8 +160,14 @@ wait for a second yes unless something in steps 1–3 was genuinely open.
 
 `template_write` with `name`, `folder`, `title`, `description`, `tags` and
 `content` (the frontmatter and body; leave the `template:` block out). Or `from`,
-`keep`, `set` and `body` when deriving from a note. A template that would not
-render is refused: read the error, fix it, write again.
+`keep`, `set` and `body` when deriving from a note. Add `when` to tie it to stages.
+A template that would not render is refused: read the error, fix it, write again.
+
+A folder template: `template_write` with `name`, `folder`, `title`, `description`,
+`tags`, `stages` and `files` — each note keyed by its path inside the new folder,
+its content the whole note, frontmatter included. `files` is the whole template:
+writing it again drops any file left out. Then each later-stage note template,
+with `when`.
 
 ## 6. Check what it makes
 
@@ -128,6 +176,10 @@ note it produces today, with the date and user filled in. Read it as the person
 who will fill it would: does it say what goes where, and is there anything they
 would have to delete? Fix and write again if so.
 
+For a folder template the answer is under `folder_templates`, with `rendered`
+holding every file (the folder's name shown as `<name>`). Read each, and check that
+the later-stage templates list the `when` you meant.
+
 ## 7. Answer
 
 - A line on what the template is for and where it applies.
@@ -135,12 +187,13 @@ would have to delete? Fix and write again if so.
 - The sources you used, as links, and what you took from each.
 - What you left out on purpose and why — the section most templates of this kind
   carry that this vault does not need.
-- That it appears when creating a note in that folder.
+- That it appears when creating a note in that folder — a folder template under
+  "New notebook" in the same dialog, and its stages in the notebook's menu.
 
 ## What this skill does NOT do
 
-- **It does not create notes from the template.** The app does that, or the agent
-  when a note is asked for.
+- **It does not create notes or folders from the template.** The app does that,
+  or the agent when a note or a project is asked for (`folder_from_template`).
 - **It does not write to `.ok/` with anything but `template_write`**, and does not
   touch the folder's own frontmatter.
 - **It does not delete templates.** Replacing one is writing it again under the

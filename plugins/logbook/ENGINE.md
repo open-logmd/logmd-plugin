@@ -98,7 +98,8 @@ tell you.
 
 **Paths under `.ok/` are not documents.** `write` and `edit` refuse them: a
 folder's own frontmatter goes through `folder`, a template through
-`template_write`.
+`template_write` — a folder template too, with `files` and `stages` — and a new
+folder is made from a folder template with `folder_from_template`.
 
 `exec` is read-only and is **not a shell**: one command or one pipe, no `&&`, no
 `;`, no redirection, and no backtick, `$(` or `${` anywhere — not even inside
