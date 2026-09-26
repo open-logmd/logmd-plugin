@@ -97,6 +97,18 @@ what landed but will not render — a `mermaid-parse-error` names the line of a
 fence mermaid cannot draw. The write is not refused for it, so nothing else will
 tell you.
 
+**Write a page to be scanned, not only read.** A person reads these in the LogMD
+app, which draws GitHub/Obsidian callouts as coloured boxes. A page longer than a
+screen opens with a `> [!SUMMARY]` callout — two to four lines with the conclusion.
+Decisions, risks and next steps sit where they occur in `> [!IMPORTANT]`,
+`> [!WARNING]`, `> [!CAUTION]`, `> [!TIP]` or `> [!NOTE]` (text after the marker is
+the box's title). Sections of a screen or less under `##`/`###`; paragraphs of a few
+sentences; parallel facts as a list; anything with attributes — options, costs,
+owners — as a table. `write` and `edit` answer with `suggestions` when a page falls
+short of this (`no-summary`, `wall-of-text`, `long-section`, `list-as-table`,
+`no-highlight`): act on them with `edit` before moving on. Log entries are raw
+capture and keep their own shape; they are never asked for a summary.
+
 **Finish a long page by pointing at it, not by asking for it to be read.** After
 writing or reworking anything the user has to review — a document, a walkthrough, a
 plan, a research note — call `highlight` on it with the few places that matter: the
