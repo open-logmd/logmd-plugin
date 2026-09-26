@@ -80,6 +80,7 @@ backlinks and attribution that `exec` returns per file. The mapping:
 | Lint one doc, optionally auto-fix | `lint` (`fix: true` with `document`) |
 | Who wrote a version, and when | `history` |
 | A restore point, and going back to one | `checkpoint`, `restore_version` |
+| Point the reader at what matters in a page | `highlight` (`quote`s or `heading`s, each with a `kind` and a `note`) |
 
 **`write` with `position: replace` overwrites the entire body.** That is correct
 for a document that does not exist yet and destructive for one that does — it is
@@ -95,6 +96,16 @@ replacement for it.
 what landed but will not render — a `mermaid-parse-error` names the line of a
 fence mermaid cannot draw. The write is not refused for it, so nothing else will
 tell you.
+
+**Finish a long page by pointing at it, not by asking for it to be read.** After
+writing or reworking anything the user has to review — a document, a walkthrough, a
+plan, a research note — call `highlight` on it with the few places that matter: the
+conclusion (`important`), the decision they must take (`decision`), what is still
+open (`question`), what comes next (`next`), each with a one-sentence `note`. The app
+marks them in the note and steps the reader through them. A `quote` is exact body
+text within one paragraph, a `heading` covers its section; if one misses, nothing is
+set and the error says which. It replaces the page's earlier highlights and changes
+nothing in the page itself.
 
 **Paths under `.ok/` are not documents.** `write` and `edit` refuse them: a
 folder's own frontmatter goes through `folder`, a template through
